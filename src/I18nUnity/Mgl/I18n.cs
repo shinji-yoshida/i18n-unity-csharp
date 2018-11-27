@@ -34,17 +34,24 @@ namespace Mgl
 
         void InitConfig()
         {
-            if (locales.Contains(_currentLocale))
-            {
-                string localConfigPath = _localePath + _currentLocale;
-                // Read the file as one string.
-                TextAsset configText = Resources.Load(localConfigPath) as TextAsset;
-                translationData = JSON.Parse(configText.text);
-            }
-            else if (_isLoggingMissing)
+            FixCurrentLocale ();
+
+            string translationDataPath = _localePath + _currentLocale;
+            // Read the file as one string.
+            TextAsset configText = Resources.Load(translationDataPath) as TextAsset;
+            translationData = JSON.Parse(configText.text);
+        }
+
+        void FixCurrentLocale ()
+        {
+            if (locales.Contains (_currentLocale))
+                return;
+
+            if (_isLoggingMissing)
             {
                 Debug.Log("Missing: locale [" + _currentLocale + "] not found in supported list");
             }
+            _currentLocale = locales.First ();
         }
 
         public static string GetLocale()
